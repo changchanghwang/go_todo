@@ -5,12 +5,12 @@ import "github.com/gofiber/fiber/v2"
 func main() {
     app := fiber.New()
 
-	app.Get("/:name?", func(c *fiber.Ctx) error {
-		if c.Params("name") != "" {
-			return c.SendString("Hello " + c.Params("name"))
+	app.Get("/:name?", func(ctx *fiber.Ctx) error {
+		if ctx.Params("name") != "" {
+			return ctx.SendString("Hello " + ctx.Params("name"))
 			// => Hello john
 		}
-		return c.SendString("Where is john?")
+		return ctx.SendString("Where is john?")
 	})
 	
 	
