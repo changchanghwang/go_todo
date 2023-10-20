@@ -18,3 +18,8 @@ func From(args dto.TodoCreateDto) Todo {
 		Description: args.Description,
 	}
 }
+
+func (t *Todo) Update(args dto.TodoUpdateDto) {
+	t.Title = args.Title
+	t.Description = args.Description
+}
