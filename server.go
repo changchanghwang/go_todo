@@ -1,6 +1,7 @@
 package main
 
 import (
+	"todo/lib/datasource"
 	"todo/routes"
 
 	"github.com/gofiber/fiber/v2"
@@ -8,6 +9,9 @@ import (
 
 func main() {
 	app := fiber.New()
+
+	datasource.Connect()
+	datasource.AutoMigrate()
 
 	routes.SetUp(app)
 

@@ -3,12 +3,15 @@ package model
 import (
 	"math/rand"
 	"todo/services/todos/dto"
+
+	"gorm.io/gorm"
 )
 
 type Todo struct {
-	Id          int
-	Title       string
-	Description string
+	gorm.Model
+	Id          int    `gorm:"primaryKey"`
+	Title       string `gorm:"size:255"`
+	Description string `gorm:"size:255"`
 }
 
 func From(args dto.TodoCreateDto) Todo {
@@ -22,4 +25,8 @@ func From(args dto.TodoCreateDto) Todo {
 func (t *Todo) Update(args dto.TodoUpdateDto) {
 	t.Title = args.Title
 	t.Description = args.Description
+}
+
+func (Todo) TableName() string {
+	return "todo"
 }
