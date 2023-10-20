@@ -1,19 +1,17 @@
 package application
 
 import (
-	"todo/services/todos/domain"
-	"todo/services/todos/infrastructure"
+	model "todo/services/todos/domain"
+	"todo/services/todos/dto"
+	repository "todo/services/todos/infrastructure"
 )
 
-func Add(title string, description string) {
-	todo := domain.Todo{
-		Title:       title,
-		Description: description,
-	}
+func Add(args dto.TodoCreateDto) {
+	todo := model.From(args)
 
-	infrastructure.Add(todo)
+	repository.Add(todo)
 }
 
-func List() []domain.Todo {
-	return infrastructure.Find()
+func List() []model.Todo {
+	return repository.Find()
 }

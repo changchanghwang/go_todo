@@ -1,13 +1,13 @@
-package infrastructure
+package repository
 
-import "todo/services/todos/domain"
+import model "todo/services/todos/domain"
 
-var a = []domain.Todo{}
+var a = []model.Todo{}
 
-func Find() []domain.Todo {
+func Find() []model.Todo {
 	return a
 }
 
-func Add(todo domain.Todo) {
+func Add(todo model.Todo) {
 	a = append(a, todo)
 }

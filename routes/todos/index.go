@@ -3,6 +3,7 @@ package todos
 import (
 	"encoding/json"
 	"todo/services/todos/application"
+	"todo/services/todos/dto"
 
 	"github.com/gofiber/fiber/v2"
 )
@@ -20,18 +21,14 @@ func SetUp(app *fiber.App) {
 	})
 
 	api.Post("/", func(ctx *fiber.Ctx) error {
-		type request struct {
-			Title       string `json:"title"`
-			Description string `json:"description"`
-		}
 
-		var r request
-		err := ctx.BodyParser(&r)
+		var todoCreateDto dto.TodoCreateDto
+		err := ctx.BodyParser(&todoCreateDto)
 		if err != nil {
 			return err
 		}
 
-		application.Add(r.Title, r.Description)
+		application.Add(todoCreateDto)
 
 		return ctx.SendString("ok")
 	})
