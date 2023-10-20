@@ -9,7 +9,9 @@ import (
 func Add(args dto.TodoCreateDto) {
 	todo := model.From(args)
 
-	repository.Save(todo)
+	done := make(chan struct{})
+	go repository.SaveAsync(todo, done)
+	<-done
 }
 
 func List() []model.Todo {
@@ -19,5 +21,14 @@ func List() []model.Todo {
 func Update(id int, args dto.TodoUpdateDto) {
 	todo := repository.FindById(id)
 	todo.Update(args)
-	repository.Save(*todo)
+
+	done := make(chan struct{})
+	go repository.SaveAsync(*todo, done)
+	<-done
+}
+
+func Delete(id int) {
+	done := make(chan struct{})
+	go repository.DeleteAsync(id, done)
+	<-done
 }

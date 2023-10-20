@@ -19,12 +19,13 @@ func FindById(id int) *model.Todo {
 	return nil
 }
 
-func Save(todo model.Todo) {
+func SaveAsync(todo model.Todo, done chan struct{}) {
 	isExist := some(todoList, func(item model.Todo) bool {
 		return item.Id == todo.Id
 	})
 	if !isExist {
 		todoList = append(todoList, todo)
+		done <- struct{}{}
 		return
 	}
 	for i, v := range todoList {
@@ -32,6 +33,16 @@ func Save(todo model.Todo) {
 			todoList[i] = todo
 		}
 	}
+	done <- struct{}{}
+}
+
+func DeleteAsync(id int, done chan struct{}) {
+	for i, v := range todoList {
+		if v.Id == id {
+			todoList = append(todoList[:i], todoList[i+1:]...)
+		}
+	}
+	done <- struct{}{}
 }
 
 func Add(todo model.Todo) {

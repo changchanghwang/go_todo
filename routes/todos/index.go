@@ -49,4 +49,15 @@ func SetUp(app *fiber.App) {
 
 		return ctx.SendString("ok")
 	})
+
+	api.Delete("/:id", func(ctx *fiber.Ctx) error {
+		id := ctx.Params("id")
+		numId, err := strconv.Atoi(id)
+		if err != nil {
+			return err
+		}
+		todoService.Delete(numId)
+
+		return ctx.SendString("ok")
+	})
 }
