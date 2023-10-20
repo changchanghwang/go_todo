@@ -11,5 +11,9 @@ func main() {
 
 	routes.SetUp(app)
 
-	app.Listen(":3000")
+	err := app.Listen(":3000")
+	if err != nil {
+		print(err.Error())
+		return
+	}
 }
