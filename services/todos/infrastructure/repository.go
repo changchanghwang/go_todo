@@ -1,59 +1,32 @@
 package repository
 
 import (
+	"todo/lib/datasource"
 	model "todo/services/todos/domain"
+
+	"gorm.io/gorm/clause"
 )
 
 var todoList = []model.Todo{}
 
 func Find() []model.Todo {
-	return todoList
+	results := []model.Todo{}
+	datasource.DB.Model(&model.Todo{}).Find(&results)
+	return results
 }
 
-func FindById(id int) *model.Todo {
-	for _, item := range todoList {
-		if item.Id == id {
-			return &item
-		}
-	}
-	return nil
+func FindById(id int) model.Todo {
+	result := model.Todo{}
+	datasource.DB.Model(&model.Todo{Id: id}).First(&result)
+	return result
 }
 
-func SaveAsync(todo model.Todo, done chan struct{}) {
-	isExist := some(todoList, func(item model.Todo) bool {
-		return item.Id == todo.Id
-	})
-	if !isExist {
-		todoList = append(todoList, todo)
-		done <- struct{}{}
-		return
-	}
-	for i, v := range todoList {
-		if v.Id == todo.Id {
-			todoList[i] = todo
-		}
-	}
-	done <- struct{}{}
+func Save(todo model.Todo) {
+	datasource.DB.Clauses(clause.OnConflict{
+		UpdateAll: true,
+	}).Create(&todo)
 }
 
-func DeleteAsync(id int, done chan struct{}) {
-	for i, v := range todoList {
-		if v.Id == id {
-			todoList = append(todoList[:i], todoList[i+1:]...)
-		}
-	}
-	done <- struct{}{}
-}
-
-func Add(todo model.Todo) {
-	todoList = append(todoList, todo)
-}
-
-func some(arr []model.Todo, condition func(model.Todo) bool) bool {
-	for _, item := range arr {
-		if condition(item) {
-			return true
-		}
-	}
-	return false
+func Delete(id int) {
+	datasource.DB.Delete(&model.Todo{}, id)
 }
