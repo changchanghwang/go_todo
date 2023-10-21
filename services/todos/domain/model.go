@@ -3,13 +3,10 @@ package model
 import (
 	"math/rand"
 	"todo/services/todos/dto"
-
-	"gorm.io/gorm"
 )
 
 type Todo struct {
-	gorm.Model
-	Id          int    `gorm:"primaryKey"`
+	Id          int    `gorm:"primaryKey;autoIncrement:false"`
 	Title       string `gorm:"size:255"`
 	Description string `gorm:"size:255"`
 }
